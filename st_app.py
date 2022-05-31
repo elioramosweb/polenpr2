@@ -10,6 +10,8 @@ import plotly.express as px
 import glob
 import os
 import pickle
+import requests
+from io import BytesIO
 
 
 
@@ -193,7 +195,13 @@ if image is not None:
     col = {}
 
     col[0],col[1],col[2],col[3],col[4] = st.columns(5)
+    
+    ##gitPath = "https://github.com/elioramosweb/plantasOne/blob/main/"
 
+    ##gitPath = "https://github.com/elioramosweb/plantasOne/blob/main/a14_1.jpg?raw=true"
+
+    gitPath= "https://raw.githubusercontent.com/elioramosweb/plantasOne/main/"
+  
 
     # IMAGENES EN COLORES 
 
@@ -202,7 +210,13 @@ if image is not None:
 
         temp = str(list(df["especie"])[i])
 
-        fig2 = load_image(glob.glob("./Plantas/" + temp + "/*.jpg")[0])
+        url = gitPath + temp + "_1.jpg"
+
+        page = requests.get(url)
+
+        fig2 = Image.open(BytesIO(page.content))
+
+        #fig2 = load_image(glob.glob("./Plantas/" + temp + "/*.jpg")[0])
 
         col[i].image(fig2,width=100,caption=temp)
    
@@ -212,7 +226,11 @@ if image is not None:
 
         temp = str(list(df["especie"])[i])
 
-        fig2 = load_image(glob.glob("./Plantas/" + temp + "/*.jpg")[0])
+        url = gitPath + temp + "_1.jpg"
+
+        page = requests.get(url)
+
+        fig2 = Image.open(BytesIO(page.content))
 
         col[i].image(ImageOps.grayscale(fig2),width=100,caption=temp + "(Gris)")
 
